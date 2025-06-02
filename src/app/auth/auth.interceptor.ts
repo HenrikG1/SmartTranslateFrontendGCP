@@ -1,12 +1,14 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { Auth } from '@angular/fire/auth';
+import { from } from 'rxjs';
 import { switchMap } from 'rxjs';
 
 export const authInterceptorFn: HttpInterceptorFn = (req, next) => {
-  const oidcSecurityService = inject(OidcSecurityService);
+  const auth = inject(Auth);
 
-  return oidcSecurityService.getAccessToken().pipe(
+
+  return from(auth.currentUser?.getIdToken() ?? Promise.resolve(null)).pipe(
     switchMap(token => {
       if (token) {
         const cloned = req.clone({

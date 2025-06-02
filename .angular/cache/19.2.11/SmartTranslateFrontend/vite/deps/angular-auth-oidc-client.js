@@ -1,7 +1,10 @@
 import {
+  toSignal
+} from "./chunk-KAERFIP5.js";
+import {
   Router
-} from "./chunk-ZZHM5MYT.js";
-import "./chunk-7EFRP32S.js";
+} from "./chunk-F3NR34CJ.js";
+import "./chunk-APM7TUGD.js";
 import {
   HttpClient,
   HttpErrorResponse,
@@ -10,37 +13,31 @@ import {
   HttpResponse,
   provideHttpClient,
   withInterceptorsFromDi
-} from "./chunk-DM6S6BDF.js";
-import "./chunk-KGCED3UM.js";
+} from "./chunk-TLHOWHPY.js";
+import "./chunk-U35LPTLH.js";
 import {
   CommonModule
-} from "./chunk-QDYYR3LW.js";
+} from "./chunk-O3C63SFW.js";
 import {
   DOCUMENT,
   isPlatformBrowser
-} from "./chunk-55MOB3KI.js";
+} from "./chunk-GKTOAGD2.js";
 import {
   APP_INITIALIZER,
-  DestroyRef,
   Injectable,
   InjectionToken,
   NgModule,
   NgZone,
   PLATFORM_ID,
   RendererFactory2,
-  RuntimeError,
-  assertInInjectionContext,
-  assertNotInReactiveContext,
-  computed,
   inject,
   isDevMode,
   makeEnvironmentProviders,
   setClassMetadata,
-  signal,
   ɵɵdefineInjectable,
   ɵɵdefineInjector,
   ɵɵdefineNgModule
-} from "./chunk-OO74OAGZ.js";
+} from "./chunk-BUVTL7WI.js";
 import {
   BehaviorSubject,
   Observable,
@@ -64,11 +61,11 @@ import {
   throwError,
   timeout,
   timer
-} from "./chunk-P6U2JBMQ.js";
+} from "./chunk-L7O5LDHY.js";
 import {
   __spreadProps,
   __spreadValues
-} from "./chunk-WDMUDEB6.js";
+} from "./chunk-5K356HEJ.js";
 
 // node_modules/rfc4648/lib/rfc4648.js
 var base64UrlEncoding = {
@@ -151,68 +148,6 @@ function _stringify(data, encoding, opts) {
     }
   }
   return out;
-}
-
-// node_modules/@angular/core/fesm2022/rxjs-interop.mjs
-function toSignal(source, options) {
-  typeof ngDevMode !== "undefined" && ngDevMode && assertNotInReactiveContext(toSignal, "Invoking `toSignal` causes new subscriptions every time. Consider moving `toSignal` outside of the reactive context and read the signal value where needed.");
-  const requiresCleanup = !options?.manualCleanup;
-  requiresCleanup && !options?.injector && assertInInjectionContext(toSignal);
-  const cleanupRef = requiresCleanup ? options?.injector?.get(DestroyRef) ?? inject(DestroyRef) : null;
-  const equal = makeToSignalEqual(options?.equal);
-  let state;
-  if (options?.requireSync) {
-    state = signal({
-      kind: 0
-      /* StateKind.NoValue */
-    }, {
-      equal
-    });
-  } else {
-    state = signal({
-      kind: 1,
-      value: options?.initialValue
-    }, {
-      equal
-    });
-  }
-  const sub = source.subscribe({
-    next: (value) => state.set({
-      kind: 1,
-      value
-    }),
-    error: (error) => {
-      if (options?.rejectErrors) {
-        throw error;
-      }
-      state.set({
-        kind: 2,
-        error
-      });
-    }
-    // Completion of the Observable is meaningless to the signal. Signals don't have a concept of
-    // "complete".
-  });
-  if (options?.requireSync && state().kind === 0) {
-    throw new RuntimeError(601, (typeof ngDevMode === "undefined" || ngDevMode) && "`toSignal()` called with `requireSync` but `Observable` did not emit synchronously.");
-  }
-  cleanupRef?.onDestroy(sub.unsubscribe.bind(sub));
-  return computed(() => {
-    const current = state();
-    switch (current.kind) {
-      case 1:
-        return current.value;
-      case 2:
-        throw current.error;
-      case 0:
-        throw new RuntimeError(601, (typeof ngDevMode === "undefined" || ngDevMode) && "`toSignal()` called with `requireSync` but `Observable` did not emit synchronously.");
-    }
-  }, {
-    equal: options?.equal
-  });
-}
-function makeToSignalEqual(userEquality = Object.is) {
-  return (a, b) => a.kind === 1 && b.kind === 1 && userEquality(a.value, b.value);
 }
 
 // node_modules/angular-auth-oidc-client/fesm2022/angular-auth-oidc-client.mjs
@@ -6794,13 +6729,4 @@ export {
   provideAuth,
   withAppInitializerAuthCheck
 };
-/*! Bundled license information:
-
-@angular/core/fesm2022/rxjs-interop.mjs:
-  (**
-   * @license Angular v19.2.10
-   * (c) 2010-2025 Google LLC. https://angular.io/
-   * License: MIT
-   *)
-*/
 //# sourceMappingURL=angular-auth-oidc-client.js.map
