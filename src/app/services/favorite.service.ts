@@ -20,38 +20,38 @@ export class favoriteService {
       );
   }
 
-  addfavorite(favorite: favorite): Observable<favorite> {
+  addfavorite(favorite: favorite): Observable<favorite[]> {
     const dto = this.favoriteToDTO(favorite);
-    return this.http.post<favoriteDTO | favoriteDTO[]>(this.API_BASE_URL, dto)
+    return this.http.post<favoriteDTO[]>(this.API_BASE_URL, dto)
       .pipe(
-        map(result => {
-          const dtoResult = Array.isArray(result) ? result[0] : result;
-          return this.dtoToFavorite(dtoResult);
-        }),
+        map(result => (result && Array.isArray(result)
+          ? result.map(dto => this.dtoToFavorite(dto))
+          : []
+        )),
         catchError(this.handleError)
       );
   }
 
-  updatefavorite(favorite: favorite): Observable<favorite> {
+  updatefavorite(favorite: favorite): Observable<favorite[]> {
     const dto = this.favoriteToDTO(favorite);
-    return this.http.put<favoriteDTO | favoriteDTO[]>(this.API_BASE_URL, {
+    return this.http.put<favoriteDTO[]>(this.API_BASE_URL, {
       id: dto.id,
       text: dto.text,
       languageKey: dto.languageKey
     })
       .pipe(
-        map(result => {
-          const dtoResult = Array.isArray(result) ? result[0] : result;
-          return this.dtoToFavorite(dtoResult);
-        }),
+        map(result => (result && Array.isArray(result)
+          ? result.map(dto => this.dtoToFavorite(dto))
+          : []
+        )),
         catchError(this.handleError)
       );
   }
 
-  deletefavorite(favorite: favorite): void {
+  deletefavorite(favorite: favorite): Observable<favorite[]> {
     const dto = this.favoriteToDTO(favorite);
     console.log('Deleting favorite:', dto.id, dto.text, dto.languageKey);
-    this.http.delete(this.API_BASE_URL, {
+    return this.http.delete(this.API_BASE_URL, {
       body: {
         id: dto.id,
         text: dto.text,
@@ -59,12 +59,12 @@ export class favoriteService {
       }
     })
     .pipe(
-      catchError(this.handleError)
-    )
-    .subscribe({
-      next: () => console.log('Delete request sent to backend'),
-      error: err => console.error('Fehler beim Löschen:', err)
-    });
+      map(result => (result && Array.isArray(result)
+          ? result.map(dto => this.dtoToFavorite(dto))
+          : []
+        )),
+        catchError(this.handleError)
+      );
   }
 
   // Mapping-Methoden

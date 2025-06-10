@@ -61,13 +61,16 @@ export class FavoritesComponentComponent implements OnChanges {
   deleteFavorite(favorite: favorite) {
     const index = this.favorites.findIndex(fav => fav.id === favorite.id);
     if (index !== -1) {
-      this.favoriteService.deletefavorite(favorite)
-      this.favorites.splice(index, 1);
-      console.log('Favorit erfolgreich gelöscht:', favorite);
+      this.favoriteService.deletefavorite(favorite).subscribe({
+        next: (favorites: favorite[]) => {
+          this.favorites = favorites;
+        },
+        error: err => {
+          console.error('Fehler beim Löschen des Favoriten:', err);
+        }
+      });
     }
-    else {
-      console.error('Favorit nicht gefunden:', favorite);
-    }
+
   }
 
   addFavorite(id: string, field: string, sourceLanguage: string, languageKey: string) {
@@ -77,9 +80,8 @@ export class FavoritesComponentComponent implements OnChanges {
       return;
     }
     this.favoriteService.addfavorite(newFavorite).subscribe({
-      next: (favorite) => {
-        this.favorites.push(favorite);
-        console.log('Favorit erfolgreich hinzugefügt:', favorite);
+      next: (favorites) => {
+        this.favorites = favorites;
       },
       error: err => {
         console.error('Fehler beim Hinzufügen des Favoriten:', err);
@@ -101,8 +103,9 @@ export class FavoritesComponentComponent implements OnChanges {
       this.editingFavorite.text = this.editedText; // Aktualisiere den Favoriten
       console.log('Aktualisiere Favorit:', this.editingFavorite);
       this.favoriteService.updatefavorite(this.editingFavorite).subscribe({
-        next: (favorite) => {
-          console.log('Favorit erfolgreich aktualisiert:', favorite);
+        next: (favorites: favorite[]) => {
+          this.favorites = favorites;
+          console.log('Favorit erfolgreich aktualisiert:', this.editingFavorite);
         },
         error: err => {
           console.error('Fehler beim Aktualisieren des Favoriten:', err);
